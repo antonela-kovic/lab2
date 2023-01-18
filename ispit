@@ -1,0 +1,112 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <conio.h>
+#define min 10
+#define max 20
+
+
+
+typedef struct _cvor* position;
+
+struct _cvor {
+	int El;
+	position Next;
+};
+typedef struct _cvor cvor;
+int UnosListe(position,int);
+int BrisiDuplikat(position);
+int BrisiBroj(position, int);
+void printlist(position);
+int main(){
+	cvor L;
+	int unos = 0;
+	int broj_r,brisi,broj = 0;
+	srand((unsigned)time(NULL));
+	broj_r= rand() % ((max + min) - min);
+	unos = UnosListe(&L,broj);
+	if (unos != 0) {
+		printf("Doslo je do prekoracenja rama\n");
+		//brisanje liste
+		return - 1;
+
+	}
+	printlist(&L);
+    brisi = BrisiDuplikat(&L);
+	printlist(&L);
+	printf("Unesite broj za usporedbu\n");
+	scanf("%d", broj);
+	brisi = BrisiBroj(&L, broj);
+	printlist(&L);
+
+	return 0;
+}
+int UnosListe(position P,int broj) {
+	int brojevi = { 0 }; //unosimo na pocetak
+	int i = 0;
+
+	position g=NULL;
+	
+	//for (i = 0; i < 20; i++) {
+	//	brojevi[i] = rand() % ((max + min) - min);  ne treba ovo jer radimo s listom
+	//}
+	//g->El = rand() % ((max + min) - min);
+	g = (position)malloc(sizeof(cvor));
+	if (g == NULL) {
+		printf("Alokacija neuspjela\n");
+		return -1;
+	}
+	g->El = broj;
+	g->Next = P->Next;
+	P->Next = g;
+
+
+
+	return 0;
+}
+
+int BrisiDuplikat(position P) {
+	position duplikati;
+	position pocetak = P;
+	duplikati = P->Next;
+	while (P->Next != NULL) {
+		if (P->Next->El == duplikati->El)
+			duplikati = P->Next;
+		P = P->Next;
+	}
+	P = pocetak;
+	while (P->Next != NULL && P->Next != duplikati) {
+		P = pocetak;
+	}
+	P->Next = duplikati->Next;
+	free(duplikati);
+
+	return 0;
+}
+
+int BrisiBroj(position P, int broj1) {
+	position  broj;
+	position pocetak = P;
+	broj = broj1;
+	while (P->Next != NULL) {
+		if (P->Next->El == broj->El)
+			broj = P->Next;
+		P = P->Next;
+	}
+	P = pocetak;
+	while (P->Next != NULL && P->Next != broj) {
+		P = pocetak;
+	}
+	P->Next = broj->Next;
+	free(broj);
+
+	return 0;
+}
+void printList(position P) {
+	while (P != NULL) {
+		printf("%d\n", P->El);
+		P = P->Next;
+	}
+
+}
